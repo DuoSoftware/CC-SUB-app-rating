@@ -223,17 +223,17 @@
           </md-content>
 
           <md-divider></md-divider>
-          <md-dialog-actions layout="row" class="bg-gray">
-            <div layout="row" class="layout-row" ng-if="vm.mode=='Add'">
-              <md-progress-circular class="gen-save-indicator" ng-if="vm.addFeatureSubmitted"></md-progress-circular>
-              <md-button ng-disabled="vm.addFeatureSubmitted" type="submit" class="md-raised md-accent" form="addFeatureForm">Save</md-button>
-            </div>
-            <div layout="row" class="layout-row" ng-if="vm.mode=='Update'">
-              <md-progress-circular class="gen-save-indicator" ng-if="vm.addFeatureSubmitted"></md-progress-circular>
-              <md-button ng-click="resetFeature();">Reset</md-button>
-              <md-button ng-disabled="vm.addFeatureSubmitted" type="submit" class="md-raised md-accent" form="addFeatureForm">Update</md-button>
-            </div>
-          </md-dialog-actions>
+          <!--<md-dialog-actions layout="row" class="bg-gray">-->
+            <!--<div layout="row" class="layout-row" ng-if="vm.mode=='Add'">-->
+              <!--<md-progress-circular class="gen-save-indicator" ng-if="vm.addFeatureSubmitted"></md-progress-circular>-->
+              <!--<md-button ng-disabled="vm.addFeatureSubmitted" type="submit" class="md-raised md-accent" form="addFeatureForm">Save</md-button>-->
+            <!--</div>-->
+            <!--<div layout="row" class="layout-row" ng-if="vm.mode=='Update'">-->
+              <!--<md-progress-circular class="gen-save-indicator" ng-if="vm.addFeatureSubmitted"></md-progress-circular>-->
+              <!--<md-button ng-click="resetFeature();">Reset</md-button>-->
+              <!--<md-button ng-disabled="vm.addFeatureSubmitted" type="submit" class="md-raised md-accent" form="addFeatureForm">Update</md-button>-->
+            <!--</div>-->
+          <!--</md-dialog-actions>-->
         </form>
     </md-content>
     <!-- / CONTENT WRAPPER -->
@@ -289,10 +289,15 @@
         <!--</div>-->
     <!--</md-content>-->
 </div>
-<!--<div md-whiteframe="8dp" layout="row" layout-align="end center" class="pos-rel" style="z-index: 1">-->
-    <!--<div layout="row" class="layout-row">-->
-        <!--<md-button ng-click="clearform(content.type)">Clear</md-button>-->
-        <!--<md-button ng-disabled="vm.submitted" type="submit" form="changePlanForm" class="md-raised md-accent">Save</md-button>-->
-    <!--</div>-->
-<!--</div>-->
+<div md-whiteframe="8dp" layout="row" layout-align="end center" class="pos-rel" style="z-index: 1">
+    <div layout="row" class="layout-row" ng-if="vm.mode=='Add'">
+      <md-progress-circular class="gen-save-indicator" ng-if="vm.addFeatureSubmitted"></md-progress-circular>
+      <md-button ng-disabled="vm.addFeatureSubmitted" type="submit" class="md-raised md-accent" form="addFeatureForm">Save</md-button>
+    </div>
+    <div layout="row" class="layout-row" ng-if="vm.mode=='Update'">
+      <md-progress-circular class="gen-save-indicator" ng-if="vm.addFeatureSubmitted"></md-progress-circular>
+      <md-button ng-click="resetFeature()">Reset</md-button>
+      <md-button ng-disabled="vm.addFeatureSubmitted" type="submit" class="md-raised md-accent" form="addFeatureForm">Update</md-button>
+    </div>
+</div>
 <!-- / CONTENT CARD -->

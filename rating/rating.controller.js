@@ -465,7 +465,7 @@
               featureObj.unitsFrom=scheme[0].unitsFrom!=""?parseInt(scheme[0].unitsFrom):"";
               featureObj.unitsTo=scheme[0].unitsTo!=""?parseInt(scheme[0].unitsTo):"";
               featureObj.unitUom=scheme[0].unitUom;
-              featureObj.price=parseInt(scheme[0].price);
+              featureObj.price=scheme[0].price!=""?parseInt(scheme[0].price):"";
               featureObj.uom=scheme[0].uom;
               featureObj.autoTermination=scheme[0].autoTermination=="1"?true:false;
               featureObj.costPerUnitAdd=parseInt(scheme[0].costPerUnitAdd);
@@ -494,7 +494,7 @@
                 slabObj.unitsFrom = scheme[i].unitsFrom!=""?parseInt(scheme[i].unitsFrom):"";
                 slabObj.unitsTo = scheme[i].unitsTo!=""?parseInt(scheme[i].unitsTo):"";
                 slabObj.unitUom = scheme[i].unitUom;
-                slabObj.price = parseInt(scheme[i].price);
+                slabObj.price = scheme[i].price!=""?parseInt(scheme[i].price):"";
                 slabObj.uom = scheme[i].uom;
                 slabObj.autoTermination = scheme[i].autoTermination=="1"?true:false;
                 slabObj.costPerUnitAdd = parseInt(scheme[i].costPerUnitAdd);
@@ -511,7 +511,7 @@
               featureObj.unitsFrom=scheme[0].unitsFrom!=""?parseInt(scheme[0].unitsFrom):"";
               featureObj.unitsTo=scheme[0].unitsTo!=""?parseInt(scheme[0].unitsTo):"";
               featureObj.unitUom=scheme[0].unitUom;
-              featureObj.price=parseInt(scheme[0].price);
+              featureObj.price=scheme[0].price!=""?parseInt(scheme[0].price):"";
               featureObj.uom=scheme[0].uom;
               featureObj.autoTermination=true;
               featureObj.costPerUnitAdd=parseInt(scheme[0].costPerUnitAdd);
@@ -619,6 +619,7 @@
 
 			if(mode=="Add")
 			{
+        vm.closeAdvanceFeatures(vm.features);
 				$scope.addNewRow(vm.features);
 			}
 			else if(mode=="Update")
@@ -639,6 +640,10 @@
           //vm.setAdvanceFeatures(vm.features);
           //vm.closeAdvanceFeatures(vm.features);
           $scope.setFeature(vm.features, vm.featureType);
+        }
+        else
+        {
+          vm.closeAdvanceFeatures(vm.features);
         }
 
 			}

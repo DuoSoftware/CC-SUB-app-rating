@@ -134,6 +134,11 @@
                     <input type="number" ng-required="true" min="1" ng-model="vm.features.unitsTo">
                   </md-input-container>
                   <div flex="5"></div>
+                  <md-input-container class="md-block mb-0" id="invProdQty4"  flex="30">
+                    <label>Unit Price</label>
+                    <input type="number" ng-required="true" min="0" maxlength="10" ng-change="" ng-model="vm.features.price">
+                  </md-input-container>
+                  <div flex="5"></div>
                   <md-input-container class="md-block" id="invProdQty3" flex="30">
                     <label>Unit UOM</label>
                     <!--<input type="text" ng-required="true" min="1" ng-model="row.unitUom">-->
@@ -187,6 +192,11 @@
                   <md-input-container class="mb-0" flex="30">
                     <label>Ending Quantity</label>
                     <input type="number" ng-required="true" min="1" ng-model="slab.unitsTo">
+                  </md-input-container>
+                  <div flex="5"></div>
+                  <md-input-container class="mb-0" flex="30">
+                    <label>Unit Price</label>
+                    <input type="number" ng-required="true" min="0" maxlength="10" ng-change="" ng-model="slab.price">
                   </md-input-container>
                   <div flex="5"></div>
                   <md-input-container class="mb-0" flex="30">

@@ -240,6 +240,12 @@
                                 <div flex class="">{{vm.selectedFeature.unitsTo}}</div>
                             </div>
                             <div layout="row" layout-align="start center" class="info-grid-row bordered-dark" ng-if="vm.selectedFeature.type!='SLAB'">
+                              <div flex="40" class="iconed-label">
+                                <md-icon md-font-icon="icon-calendar-today"></md-icon> <span>Unit Price</span>
+                              </div>
+                              <div flex class="">{{vm.selectedFeature.price| isoCurrency:BaseCurrency:decimalPoint}}</div>
+                            </div>
+                            <div layout="row" layout-align="start center" class="info-grid-row bordered-dark" ng-if="vm.selectedFeature.type!='SLAB'">
                                 <div flex="40" class="iconed-label">
                                     <md-icon md-font-icon="icon-calendar-check"></md-icon> <span>UOM</span>
                                 </div>
@@ -250,7 +256,8 @@
                               <div class="list-header" layout="row" flex md-whiteframe="1dp">
                                 <div flex="10">#</div>
                                 <div flex="20">Starting Quantity</div>
-                                <div flex="35">Ending Quantity</div>
+                                <div flex="20">Ending Quantity</div>
+                                <div flex="25">Unit Price</div>
                                 <div flex>Unit UOM</div>
                               </div>
                               <md-card-content class="p-0" flex>
@@ -262,8 +269,11 @@
                                     <div flex="20">
                                       <span>{{item.unitsFrom}}</span>
                                     </div>
-                                    <div flex="35">
+                                    <div flex="20">
                                       <span>{{item.unitsTo}}</span>
+                                    </div>
+                                    <div flex="25">
+                                      <span>{{item.price| isoCurrency:BaseCurrency:decimalPoint}}</span>
                                     </div>
                                     <div flex>
                                       <span>{{item.unitUom}}</span>

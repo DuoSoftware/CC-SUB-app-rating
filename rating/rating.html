@@ -189,8 +189,8 @@
                         </md-button>
                     </div>
                 </div>
-                <md-content flex ms-scroll layout="column" class="inpage-readpane-body" ng-if="!inpageReadPaneEdit">
-                    <div layout="row" layout-align="space-between center">
+                <md-content flex ms-scroll layout="column" class="inpage-readpane-body" ng-if="!inpageReadPaneEdit" style="margin-bottom:50px;">
+                    <div layout-align="space-between center">
                         <div layout="row" layout-align="start center">
                             <div layout="column" layout-align="center start">
                                 <div class="fs-20 font-accent fw-400">{{vm.selectedFeature.feature}}</div>
@@ -207,7 +207,7 @@
                     </div>
                     <md-divider class="mt-10 mb-20"></md-divider>
 
-                    <div layout="row">
+                    <div>
                         <div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="isReadLoaded">
                             <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                         </div>
@@ -330,8 +330,200 @@
                         <!--</div>-->
                     </div>
 
-                </md-content>
+                    <md-divider class="mt-10 mb-20"></md-divider>
+                    <div layout-align="space-between center">
+                      <div layout="row" layout-align="start center">
+                        <div layout="column" layout-align="center center">
+                          <div layout="row" class="op-5">
+                            <span><b>Linked Plans for the Feature</b></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="planListForFeatureLoaded">
+                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                      </div>
+                      <div flex class="list-offset sub-list">
+                        <div class="list-header" layout="row" flex md-whiteframe="1dp">
+                          <div flex="10">#</div>
+                          <div flex="30">Plan Name</div>
+                          <div flex="20">Plan Code</div>
+                          <div flex>Type</div>
+                        </div>
+                        <md-card-content class="p-0" flex>
+                          <md-content class="list-content" ms-scroll>
+                            <div layout="row" flex class="list-item" ng-repeat="item in planListForFeature">
+                              <div flex="10">
+                                <span>{{$index + 1}}</span>
+                              </div>
+                              <div flex="30">
+                                <span>{{item.name}}</span>
+                              </div>
+                              <div flex="20">
+                                <span>{{item.code}}</span>
+                              </div>
+                              <div flex>
+                                <span>{{item.type}}</span>
+                              </div>
+                            </div>
+                          </md-content>
+                        </md-card-content>
+                      </div>
+                    </div>
+                    <div>
+                      <div layout="row" layout-align="start center">
+                        <md-button ng-click="linkFeaturePlans()" class="md-raised">Link Plans</md-button>
+                      </div>
+                    </div>
 
+                    <div ng-if="vm.planFeatureLinkingEnabled">
+                      <div layout-gt-sm="row">
+                        <md-autocomplete flex
+                                         md-select-on-match
+                                         ng-keypress="enter($event)"
+                                         ng-disabled="vm.isDisabled"
+                                         md-input-name="autocompleteField"
+                                         md-no-cache="vm.noCache"
+                                         md-selected-item="vm.selectedPlanForLink"
+                                         md-selected-item-change=""
+                                         md-search-text="vm.searchText"
+                                         md-items="item in vm.querySearch(vm.searchText)"
+                                         md-item-text="item.name"
+                                         md-floating-label="Plan"
+                                         md-min-length="0">
+                          <md-item-template>
+                            <span md-highlight-text="vm.searchText">{{item.name}}</span>
+                          </md-item-template>
+                        </md-autocomplete>
+                        <md-button ng-click="addPlanToLinkList(vm.selectedPlanForLink)" class="md-accent">Add</md-button>
+                      </div>
+                    </div>
+                    <div ng-if="vm.planFeatureLinkingEnabled">
+                      <!--<div class="main-list-preloader animate-fade-in-out" layout="row" layout-sm="column" layout-align="space-around" ng-hide="planListForFeatureLoaded">-->
+                      <!--<md-progress-circular md-mode="indeterminate"></md-progress-circular>-->
+                      <!--</div>-->
+                      <div flex class="list-offset sub-list">
+                        <div class="list-header" layout="row" flex md-whiteframe="1dp">
+                          <div flex="10">#</div>
+                          <div flex="30">Plan Name</div>
+                          <div flex="20">Plan Code</div>
+                          <div flex>Type</div>
+                        </div>
+                        <md-card-content class="p-0" flex>
+                          <md-content class="list-content" ms-scroll>
+                            <div layout="row" flex class="list-item" ng-repeat="item in plansAddedForLinkList">
+                              <div flex="10">
+                                <span>{{$index + 1}}</span>
+                              </div>
+                              <div flex="30">
+                                <span>{{item.name}}</span>
+                              </div>
+                              <div flex="20">
+                                <span>{{item.code}}</span>
+                              </div>
+                              <div flex>
+                                <span>{{item.type}}</span>
+                              </div>
+                            </div>
+                          </md-content>
+                        </md-card-content>
+                      </div>
+                    </div>
+                    <div ng-if="vm.planFeatureLinkingEnabled">
+                      <div layout="row" layout-align="end center">
+                        <md-button ng-click="overwriteFeature()" class="md-raised">Overwrite Feature</md-button>
+                      </div>
+                      <div layout="row" class="light-gray ph-15 pos-rel" ng-show="vm.overwriteFeatureEnabled">
+                          <div layout="row">
+                            <label>Feature Type : </label>
+                            <label ng-if="vm.featureOverwriteObj.type!='optional'"><b>{{vm.featureOverwriteObj.type}}</b></label>
+                            <div ng-if="vm.featureOverwriteObj.type=='optional'">
+                              <md-input-container class="mv-5">
+                                <md-radio-group name="planType" ng-required ng-model="vm.featureOverwriteObj.type" layout="row" class="cc-switch-buttons-group">
+                                  <md-radio-button value="FIXED" class="cc-switch-buttons" md-ink-ripple ng-style="vm.featureOverwriteObj.type == 'SLAB' ? {'z-index':'1'} : {'z-index':'0'}">FIXED</md-radio-button>
+                                  <md-radio-button value="SLAB" class="cc-switch-buttons" md-ink-ripple ng-style="vm.featureOverwriteObj.type == 'FIXED' ? {'z-index':'1'} : {'z-index':'0'}">SLAB</md-radio-button>
+                                </md-radio-group>
+                              </md-input-container>
+                            </div>
+                          </div>
+                          <div layout="row">
+                            <div class="p-15" layout="row" ng-if="vm.featureOverwriteObj.type=='FIXED'">
+                              <div layout-align="start center" layout="row" flex>
+                                <md-input-container class="md-block mb-0" id="invProdQty2" flex="30">
+                                  <label>Unit Quantity</label>
+                                  <input type="number" ng-required="true" min="1" ng-model="vm.featureOverwriteObj.unitsTo">
+                                </md-input-container>
+                                <div flex="5"></div>
+                                <md-input-container class="md-block mb-0" id="invProdQty4"  flex="30">
+                                  <label>Unit Price</label>
+                                  <input type="number" ng-required="true" min="0" maxlength="10" ng-change="" ng-model="vm.featureOverwriteObj.price">
+                                </md-input-container>
+                                <div flex="5"></div>
+                                <md-input-container class="md-block" id="invProdQty3" flex="30">
+                                  <label>Unit UOM</label>
+                                  <md-select ng-required="true" flex ng-model="vm.featureOverwriteObj.unitUom">
+                                    <md-option ng-repeat="uom in vm.uoms" value="{{uom.UOMCode}}">{{uom.UOMCode}}</md-option>
+                                  </md-select>
+                                </md-input-container>
+                              </div>
+                            </div>
+                            <div ng-if="vm.featureOverwriteObj.type=='SLAB'" layout="column" class="p-10">
+                              <div layout="row" ng-repeat="slab in vm.featureOverwriteObj.scheme" class="highlight-blue solid p-5">
+                                <md-input-container class="mb-0" flex="30">
+                                  <label>Starting quantity</label>
+                                  <input type="number" ng-required="true" min="0" ng-model="slab.unitsFrom">
+                                </md-input-container>
+                                <div flex="5"></div>
+                                <md-input-container class="mb-0" flex="30">
+                                  <label>Ending Quantity</label>
+                                  <input type="number" ng-required="true" min="1" ng-model="slab.unitsTo">
+                                </md-input-container>
+                                <div flex="5"></div>
+                                <md-input-container class="mb-0" flex="30">
+                                  <label>Unit Price</label>
+                                  <input type="number" ng-required="true" min="0" maxlength="10" ng-change="" ng-model="slab.price">
+                                </md-input-container>
+                                <div flex="5"></div>
+                                <md-input-container class="mb-0" flex="30">
+                                  <label>Unit UOM</label>
+                                  <md-select ng-required="true" flex ng-model="slab.unitUom">
+                                    <md-option ng-repeat="uom in vm.uoms" value="{{uom.UOMCode}}">{{uom.UOMCode}}</md-option>
+                                  </md-select>
+                                </md-input-container>
+                                <div class="w-5"></div>
+                                <div layout="column" layout-align="center center" class="v-rule-gray">
+                                  <md-button ng-click="removerow($index,vm.featureOverwriteObj.scheme);" class="md-icon-button md-warn"><md-icon md-font-icon="icon-close-circle"></md-icon><md-tooltip>Remove slab</md-tooltip> </md-button>
+                                </div>
+                              </div>
+
+                              <div layout="row" layout-align="end center">
+                                <md-button ng-click="addNewSlab(vm.featureOverwriteObj);" class="md-accent md-icon-button mr-10"><md-icon md-font-icon="icon-plus-circle"></md-icon><md-tooltip>Add slab</md-tooltip></md-button>
+                              </div>
+                            </div>
+                          </div>
+                          <div layout="row" layout-align="end end">
+                            <md-button ng-click="overwriteFeatureCancel()" class="md-raised">Cancel</md-button>
+                          </div>
+                      </div>
+                    </div>
+                    <div layout="row" ng-if="vm.planFeatureLinkingEnabled">
+                    </div>
+                    <!--<div ng-if="vm.planFeatureLinkingEnabled">-->
+                      <!--<div layout="row" layout-align="end center">-->
+                        <!--<div layout="row" class="layout-row">-->
+                          <!--<md-button ng-disabled="vm.submitted" ng-click="addPlansToFeature()" type="button" class="md-raised md-accent">Link To Feature</md-button>-->
+                        <!--</div>-->
+                      <!--</div>-->
+                    <!--</div>-->
+
+                </md-content>
+                <div layout="row" layout-align="end center" md-whiteframe="8dp" class="bottom-fixed-bar absolute" ng-if="vm.planFeatureLinkingEnabled">
+                  <div layout="row"></div>
+                  <div layout="row" class="layout-row">
+                    <md-button ng-disabled="vm.submitted" ng-click="addPlansToFeature()" type="button" class="md-raised md-accent">Link To Feature</md-button>
+                  </div>
+                </div>
 
                 <!--<md-content flex layout="column" class="inpage-readpane-body" ng-if="!inpageReadPaneEdit">-->
                 <!--<md-card flex class="input-block-gen">-->

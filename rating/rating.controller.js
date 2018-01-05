@@ -203,10 +203,264 @@
 			$scope.inpageReadPaneEdit = false;
 			$scope.isReadLoaded = false;
 			vm.selectedFeature = feature;
+      $scope.loadPlansForFeature(feature);
 
       $scope.isReadLoaded = true;
 
 		};
+
+    $scope.planListForFeature=[];
+    $scope.planListForFeatureLoaded=true;
+
+    $scope.loadPlansForFeature = function(feature) {
+
+      $scope.planListForFeatureLoaded=false;
+      vm.planFeatureLinkingEnabled = false;
+      $scope.planListForFeature=[];
+      $charge.plan().getPlansForFeature(feature.featureCode).success(function(data){
+        //console.log(data);
+        $scope.planListForFeature = data;
+        $scope.planListForFeatureLoaded=true;
+      }).error(function(data) {
+        //console.log(data);
+        $scope.planListForFeature=[];
+        $scope.planListForFeatureLoaded=true;
+      });
+
+    };
+
+    vm.planFeatureLinkingEnabled = false;
+    $scope.linkFeaturePlans = function() {
+      vm.planFeatureLinkingEnabled = true;
+      vm.selectedPlanForLink="";
+      vm.overwriteFeatureEnabled = false;
+      $scope.plansAddedForLinkList=[];
+    }
+
+    $scope.plansAddedForLinkList=[];
+    $scope.addPlanToLinkList = function(plan) {
+      if(plan!="")
+      {
+        var alreadyAdded = false;
+        for(var i=0;i<$scope.plansAddedForLinkList.length;i++)
+        {
+          if($scope.plansAddedForLinkList[i]==plan)
+          {
+            alreadyAdded = true;
+            notifications.toast("Plan already added", "error");
+            vm.selectedPlanForLink="";
+            break;
+          }
+        }
+
+        if(!alreadyAdded)
+        {
+          $scope.plansAddedForLinkList.push(plan);
+          vm.selectedPlanForLink="";
+        }
+      }
+      else
+      {
+        notifications.toast("Please select a valid plan", "error");
+      }
+    }
+
+    vm.overwriteFeatureEnabled = false;
+    $scope.overwriteFeature = function() {
+      vm.overwriteFeatureEnabled = true;
+      vm.uoms=$scope.UOMs;
+      vm.featureOverwriteObj = angular.copy(vm.selectedFeature);
+    }
+
+    $scope.overwriteFeatureCancel = function() {
+      vm.overwriteFeatureEnabled = false;
+    }
+
+    vm.submitted = false;
+
+    $scope.addPlansToFeature = function() {
+      vm.submitted = true;
+      if($scope.plansAddedForLinkList.length!=0)
+      {
+        for(var i=0;i<$scope.planListForFeature.length;i++)
+        {
+          var featurePlanObj = $scope.planListForFeature[i];
+          for(var j=0;j<$scope.plansAddedForLinkList.length;j++)
+          {
+            if(featurePlanObj.code==$scope.plansAddedForLinkList[j].code)
+            {
+              $scope.plansAddedForLinkList.splice(j,1);
+              break;
+            }
+          }
+        }
+
+        if($scope.plansAddedForLinkList.length!=0)
+        {
+          var guplanids = [];
+          var newPlanLinkObj = {};
+          for(var i=0;i<$scope.plansAddedForLinkList.length;i++)
+          {
+            guplanids.push($scope.plansAddedForLinkList[i].guPlanID);
+          }
+
+          if(vm.overwriteFeatureEnabled)
+          {
+            var priceschemeOverwrite = [];
+
+            var priceSchemeObj=vm.featureOverwriteObj;
+            if(priceSchemeObj.type == "FIXED")
+            {
+              priceSchemeObj.scheme[0].type="FIXED";
+              priceSchemeObj.scheme[0].unitsFrom=priceSchemeObj.unitsFrom;
+              priceSchemeObj.scheme[0].unitsTo=priceSchemeObj.unitsTo;
+              priceSchemeObj.scheme[0].unitUom=priceSchemeObj.unitUom;
+              priceSchemeObj.scheme[0].price=priceSchemeObj.price;
+              priceSchemeObj.scheme[0].uom=priceSchemeObj.uom;
+              priceSchemeObj.scheme[0].autoTermination=priceSchemeObj.autoTermination;
+              priceSchemeObj.scheme[0].costPerUnitAdd=priceSchemeObj.costPerUnitAdd!=undefined?priceSchemeObj.costPerUnitAdd:"";
+
+              for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
+                priceSchemeObj.scheme.splice(k, 1);
+              }
+            }
+            else if(priceSchemeObj.type == "SLAB")
+            {
+              for (var j = 0; j < priceSchemeObj.scheme.length; j++) {
+                var slabObj=priceSchemeObj.scheme[j];
+                slabObj.type="SLAB";
+                slabObj.costPerUnitAdd=slabObj.costPerUnitAdd!=undefined?slabObj.costPerUnitAdd:"";
+              }
+            }
+            else if(priceSchemeObj.type == "optional")
+            {
+              priceSchemeObj.scheme[0].type="";
+              priceSchemeObj.scheme[0].unitsFrom="";
+              priceSchemeObj.scheme[0].unitsTo="";
+              priceSchemeObj.scheme[0].unitUom="";
+              priceSchemeObj.scheme[0].price="";
+              priceSchemeObj.scheme[0].uom="";
+              priceSchemeObj.scheme[0].autoTermination="";
+              priceSchemeObj.scheme[0].costPerUnitAdd="";
+
+              for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
+                priceSchemeObj.scheme.splice(k, 1);
+              }
+            }
+
+            var priceSchemeOWObj = {
+              "featureCode":priceSchemeObj.featureCode,
+              "scheme":priceSchemeObj.scheme
+            };
+            priceschemeOverwrite.push(priceSchemeOWObj);
+
+            newPlanLinkObj = {
+              "guPlanIDs": guplanids,
+              "priceScheme":[vm.selectedFeature.featureCode],
+              "priceSchemeOverwrite": priceschemeOverwrite
+            };
+
+          }
+          else
+          {
+            newPlanLinkObj = {
+              "guPlanIDs": guplanids,
+              "priceScheme":[vm.selectedFeature.featureCode]
+            };
+          }
+
+          $charge.plan().addPlansToLinkFeature(newPlanLinkObj).success(function(data){
+            //console.log(data);
+            notifications.toast("Successfully Plans linked with the Feature", "success");
+            vm.submitted = false;
+            vm.planFeatureLinkingEnabled = false;
+            $scope.loadPlansForFeature(vm.selectedFeature);
+          }).error(function(data) {
+            //console.log(data);
+            notifications.toast("Plans link to Feature failed", "error");
+            vm.submitted = false;
+          });
+
+        }
+        else
+        {
+          notifications.toast("No new Plan has selected to be linked", "error");
+          vm.submitted = false;
+        }
+      }
+      else
+      {
+        notifications.toast("No Plans has selected to be linked", "error");
+        vm.submitted = false;
+      }
+    }
+
+    var self = this;
+    // list of `state` value/display objects
+    //self.tenants        = loadAll();
+    self.selectedItem  = null;
+    self.searchText    = "";
+    self.querySearch   = querySearch;
+
+    function querySearch (query) {
+
+      //Custom Filter
+      var results=[];
+      var len=0;
+      for (var i = 0, len = $scope.planlist.length; i<len; ++i){
+        //console.log($scope.allBanks[i].value.value);
+
+        if($scope.planlist[i].name.toLowerCase().indexOf(query.toLowerCase()) !=-1)
+        {
+          results.push($scope.planlist[i]);
+        }
+        else if($scope.planlist[i].code.toLowerCase().indexOf(query.toLowerCase()) !=-1)
+        {
+          results.push($scope.planlist[i]);
+        }
+
+      }
+      return results;
+    }
+
+    vm.selectedPlanForLink="";
+    $scope.planlist = [];
+    var skipPlans=0;
+    var takePlans=2;
+    $scope.loadingPlans = false;
+    $scope.loadAllPlans = function() {
+      $scope.loadingPlans = true;
+      $azureSearchHandle.getClient().SearchRequest("plan",skipPlans,takePlans,'desc','Active').onComplete(function(Response)
+      {
+        if($scope.loadingPlans)
+        {
+          skipPlans += takePlans;
+
+          for (var i = 0; i < Response.length; i++) {
+            Response[i].createdDate = $filter('date')(new Date(Response[i].createdDate), 'yyyy-MM-dd', false);
+            $scope.planlist.push(Response[i]);
+          }
+
+          $scope.loadingPlans = false;
+
+          if(Response.length=takePlans){
+            $scope.loadAllPlans();
+          }
+
+        }
+
+      }).onError(function(data)
+      {
+        //console.log(data);
+        $scope.loadingPlans = false;
+
+        $scope.infoJson= {};
+        $scope.infoJson.message =JSON.stringify(data);
+        $scope.infoJson.app ='rating';
+        logHelper.error( $scope.infoJson);
+      });
+    }
+    $scope.loadAllPlans();
 
 		function changePlans(){
 			toggleinnerView('add');

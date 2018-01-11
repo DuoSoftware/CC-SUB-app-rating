@@ -203,264 +203,264 @@
 			$scope.inpageReadPaneEdit = false;
 			$scope.isReadLoaded = false;
 			vm.selectedFeature = feature;
-      $scope.loadPlansForFeature(feature);
+			$scope.loadPlansForFeature(feature);
 
-      $scope.isReadLoaded = true;
+			$scope.isReadLoaded = true;
 
 		};
 
-    $scope.planListForFeature=[];
-    $scope.planListForFeatureLoaded=true;
+		$scope.planListForFeature=[];
+		$scope.planListForFeatureLoaded=true;
 
-    $scope.loadPlansForFeature = function(feature) {
+		$scope.loadPlansForFeature = function(feature) {
 
-      $scope.planListForFeatureLoaded=false;
-      vm.planFeatureLinkingEnabled = false;
-      $scope.planListForFeature=[];
-      $charge.plan().getPlansForFeature(feature.featureCode).success(function(data){
-        //console.log(data);
-        $scope.planListForFeature = data;
-        $scope.planListForFeatureLoaded=true;
-      }).error(function(data) {
-        //console.log(data);
-        $scope.planListForFeature=[];
-        $scope.planListForFeatureLoaded=true;
-      });
+			$scope.planListForFeatureLoaded=false;
+			vm.planFeatureLinkingEnabled = false;
+			$scope.planListForFeature=[];
+			$charge.plan().getPlansForFeature(feature.featureCode).success(function(data){
+				//console.log(data);
+				$scope.planListForFeature = data;
+				$scope.planListForFeatureLoaded=true;
+			}).error(function(data) {
+				//console.log(data);
+				$scope.planListForFeature=[];
+				$scope.planListForFeatureLoaded=true;
+			});
 
-    };
+		};
 
-    vm.planFeatureLinkingEnabled = false;
-    $scope.linkFeaturePlans = function() {
-      vm.planFeatureLinkingEnabled = true;
-      vm.selectedPlanForLink="";
-      vm.overwriteFeatureEnabled = false;
-      $scope.plansAddedForLinkList=[];
-    }
+		vm.planFeatureLinkingEnabled = false;
+		$scope.linkFeaturePlans = function() {
+			vm.planFeatureLinkingEnabled = true;
+			vm.selectedPlanForLink="";
+			vm.overwriteFeatureEnabled = false;
+			$scope.plansAddedForLinkList=[];
+		}
 
-    $scope.plansAddedForLinkList=[];
-    $scope.addPlanToLinkList = function(plan) {
-      if(plan!="")
-      {
-        var alreadyAdded = false;
-        for(var i=0;i<$scope.plansAddedForLinkList.length;i++)
-        {
-          if($scope.plansAddedForLinkList[i]==plan)
-          {
-            alreadyAdded = true;
-            notifications.toast("Plan already added", "error");
-            vm.selectedPlanForLink="";
-            break;
-          }
-        }
+		$scope.plansAddedForLinkList=[];
+		$scope.addPlanToLinkList = function(plan) {
+			if(plan!="")
+			{
+				var alreadyAdded = false;
+				for(var i=0;i<$scope.plansAddedForLinkList.length;i++)
+				{
+					if($scope.plansAddedForLinkList[i]==plan)
+					{
+						alreadyAdded = true;
+						notifications.toast("Plan already added", "error");
+						vm.selectedPlanForLink="";
+						break;
+					}
+				}
 
-        if(!alreadyAdded)
-        {
-          $scope.plansAddedForLinkList.push(plan);
-          vm.selectedPlanForLink="";
-        }
-      }
-      else
-      {
-        notifications.toast("Please select a valid plan", "error");
-      }
-    }
+				if(!alreadyAdded)
+				{
+					$scope.plansAddedForLinkList.push(plan);
+					vm.selectedPlanForLink="";
+				}
+			}
+			else
+			{
+				notifications.toast("Please select a valid plan", "error");
+			}
+		}
 
-    vm.overwriteFeatureEnabled = false;
-    $scope.overwriteFeature = function() {
-      vm.overwriteFeatureEnabled = true;
-      vm.uoms=$scope.UOMs;
-      vm.featureOverwriteObj = angular.copy(vm.selectedFeature);
-    }
+		vm.overwriteFeatureEnabled = false;
+		$scope.overwriteFeature = function() {
+			vm.overwriteFeatureEnabled = true;
+			vm.uoms=$scope.UOMs;
+			vm.featureOverwriteObj = angular.copy(vm.selectedFeature);
+		}
 
-    $scope.overwriteFeatureCancel = function() {
-      vm.overwriteFeatureEnabled = false;
-    }
+		$scope.overwriteFeatureCancel = function() {
+			vm.overwriteFeatureEnabled = false;
+		}
 
-    vm.submitted = false;
+		vm.submitted = false;
 
-    $scope.addPlansToFeature = function() {
-      vm.submitted = true;
-      if($scope.plansAddedForLinkList.length!=0)
-      {
-        for(var i=0;i<$scope.planListForFeature.length;i++)
-        {
-          var featurePlanObj = $scope.planListForFeature[i];
-          for(var j=0;j<$scope.plansAddedForLinkList.length;j++)
-          {
-            if(featurePlanObj.code==$scope.plansAddedForLinkList[j].code)
-            {
-              $scope.plansAddedForLinkList.splice(j,1);
-              break;
-            }
-          }
-        }
+		$scope.addPlansToFeature = function() {
+			vm.submitted = true;
+			if($scope.plansAddedForLinkList.length!=0)
+			{
+				for(var i=0;i<$scope.planListForFeature.length;i++)
+				{
+					var featurePlanObj = $scope.planListForFeature[i];
+					for(var j=0;j<$scope.plansAddedForLinkList.length;j++)
+					{
+						if(featurePlanObj.code==$scope.plansAddedForLinkList[j].code)
+						{
+							$scope.plansAddedForLinkList.splice(j,1);
+							break;
+						}
+					}
+				}
 
-        if($scope.plansAddedForLinkList.length!=0)
-        {
-          var guplanids = [];
-          var newPlanLinkObj = {};
-          for(var i=0;i<$scope.plansAddedForLinkList.length;i++)
-          {
-            guplanids.push($scope.plansAddedForLinkList[i].guPlanID);
-          }
+				if($scope.plansAddedForLinkList.length!=0)
+				{
+					var guplanids = [];
+					var newPlanLinkObj = {};
+					for(var i=0;i<$scope.plansAddedForLinkList.length;i++)
+					{
+						guplanids.push($scope.plansAddedForLinkList[i].guPlanID);
+					}
 
-          if(vm.overwriteFeatureEnabled)
-          {
-            var priceschemeOverwrite = [];
+					if(vm.overwriteFeatureEnabled)
+					{
+						var priceschemeOverwrite = [];
 
-            var priceSchemeObj=vm.featureOverwriteObj;
-            if(priceSchemeObj.type == "FIXED")
-            {
-              priceSchemeObj.scheme[0].type="FIXED";
-              priceSchemeObj.scheme[0].unitsFrom=priceSchemeObj.unitsFrom;
-              priceSchemeObj.scheme[0].unitsTo=priceSchemeObj.unitsTo;
-              priceSchemeObj.scheme[0].unitUom=priceSchemeObj.unitUom;
-              priceSchemeObj.scheme[0].price=priceSchemeObj.price;
-              priceSchemeObj.scheme[0].uom=priceSchemeObj.uom;
-              priceSchemeObj.scheme[0].autoTermination=priceSchemeObj.autoTermination;
-              priceSchemeObj.scheme[0].costPerUnitAdd=priceSchemeObj.costPerUnitAdd!=undefined?priceSchemeObj.costPerUnitAdd:"";
+						var priceSchemeObj=vm.featureOverwriteObj;
+						if(priceSchemeObj.type == "FIXED")
+						{
+							priceSchemeObj.scheme[0].type="FIXED";
+							priceSchemeObj.scheme[0].unitsFrom=priceSchemeObj.unitsFrom;
+							priceSchemeObj.scheme[0].unitsTo=priceSchemeObj.unitsTo;
+							priceSchemeObj.scheme[0].unitUom=priceSchemeObj.unitUom;
+							priceSchemeObj.scheme[0].price=priceSchemeObj.price;
+							priceSchemeObj.scheme[0].uom=priceSchemeObj.uom;
+							priceSchemeObj.scheme[0].autoTermination=priceSchemeObj.autoTermination;
+							priceSchemeObj.scheme[0].costPerUnitAdd=priceSchemeObj.costPerUnitAdd!=undefined?priceSchemeObj.costPerUnitAdd:"";
 
-              for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
-                priceSchemeObj.scheme.splice(k, 1);
-              }
-            }
-            else if(priceSchemeObj.type == "SLAB")
-            {
-              for (var j = 0; j < priceSchemeObj.scheme.length; j++) {
-                var slabObj=priceSchemeObj.scheme[j];
-                slabObj.type="SLAB";
-                slabObj.costPerUnitAdd=slabObj.costPerUnitAdd!=undefined?slabObj.costPerUnitAdd:"";
-              }
-            }
-            else if(priceSchemeObj.type == "optional")
-            {
-              priceSchemeObj.scheme[0].type="";
-              priceSchemeObj.scheme[0].unitsFrom="";
-              priceSchemeObj.scheme[0].unitsTo="";
-              priceSchemeObj.scheme[0].unitUom="";
-              priceSchemeObj.scheme[0].price="";
-              priceSchemeObj.scheme[0].uom="";
-              priceSchemeObj.scheme[0].autoTermination="";
-              priceSchemeObj.scheme[0].costPerUnitAdd="";
+							for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
+								priceSchemeObj.scheme.splice(k, 1);
+							}
+						}
+						else if(priceSchemeObj.type == "SLAB")
+						{
+							for (var j = 0; j < priceSchemeObj.scheme.length; j++) {
+								var slabObj=priceSchemeObj.scheme[j];
+								slabObj.type="SLAB";
+								slabObj.costPerUnitAdd=slabObj.costPerUnitAdd!=undefined?slabObj.costPerUnitAdd:"";
+							}
+						}
+						else if(priceSchemeObj.type == "optional")
+						{
+							priceSchemeObj.scheme[0].type="";
+							priceSchemeObj.scheme[0].unitsFrom="";
+							priceSchemeObj.scheme[0].unitsTo="";
+							priceSchemeObj.scheme[0].unitUom="";
+							priceSchemeObj.scheme[0].price="";
+							priceSchemeObj.scheme[0].uom="";
+							priceSchemeObj.scheme[0].autoTermination="";
+							priceSchemeObj.scheme[0].costPerUnitAdd="";
 
-              for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
-                priceSchemeObj.scheme.splice(k, 1);
-              }
-            }
+							for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
+								priceSchemeObj.scheme.splice(k, 1);
+							}
+						}
 
-            var priceSchemeOWObj = {
-              "featureCode":priceSchemeObj.featureCode,
-              "scheme":priceSchemeObj.scheme
-            };
-            priceschemeOverwrite.push(priceSchemeOWObj);
+						var priceSchemeOWObj = {
+							"featureCode":priceSchemeObj.featureCode,
+							"scheme":priceSchemeObj.scheme
+						};
+						priceschemeOverwrite.push(priceSchemeOWObj);
 
-            newPlanLinkObj = {
-              "guPlanIDs": guplanids,
-              "priceScheme":[vm.selectedFeature.featureCode],
-              "priceSchemeOverwrite": priceschemeOverwrite
-            };
+						newPlanLinkObj = {
+							"guPlanIDs": guplanids,
+							"priceScheme":[vm.selectedFeature.featureCode],
+							"priceSchemeOverwrite": priceschemeOverwrite
+						};
 
-          }
-          else
-          {
-            newPlanLinkObj = {
-              "guPlanIDs": guplanids,
-              "priceScheme":[vm.selectedFeature.featureCode]
-            };
-          }
+					}
+					else
+					{
+						newPlanLinkObj = {
+							"guPlanIDs": guplanids,
+							"priceScheme":[vm.selectedFeature.featureCode]
+						};
+					}
 
-          $charge.plan().addPlansToLinkFeature(newPlanLinkObj).success(function(data){
-            //console.log(data);
-            notifications.toast("Successfully Plans linked with the Feature", "success");
-            vm.submitted = false;
-            vm.planFeatureLinkingEnabled = false;
-            $scope.loadPlansForFeature(vm.selectedFeature);
-          }).error(function(data) {
-            //console.log(data);
-            notifications.toast("Plans link to Feature failed", "error");
-            vm.submitted = false;
-          });
+					$charge.plan().addPlansToLinkFeature(newPlanLinkObj).success(function(data){
+						//console.log(data);
+						notifications.toast("Successfully Plans linked with the Feature", "success");
+						vm.submitted = false;
+						vm.planFeatureLinkingEnabled = false;
+						$scope.loadPlansForFeature(vm.selectedFeature);
+					}).error(function(data) {
+						//console.log(data);
+						notifications.toast("Plans link to Feature failed", "error");
+						vm.submitted = false;
+					});
 
-        }
-        else
-        {
-          notifications.toast("No new Plan has selected to be linked", "error");
-          vm.submitted = false;
-        }
-      }
-      else
-      {
-        notifications.toast("No Plans has selected to be linked", "error");
-        vm.submitted = false;
-      }
-    }
+				}
+				else
+				{
+					notifications.toast("No new Plan has selected to be linked", "error");
+					vm.submitted = false;
+				}
+			}
+			else
+			{
+				notifications.toast("No Plans has selected to be linked", "error");
+				vm.submitted = false;
+			}
+		}
 
-    var self = this;
-    // list of `state` value/display objects
-    //self.tenants        = loadAll();
-    self.selectedItem  = null;
-    self.searchText    = "";
-    self.querySearch   = querySearch;
+		var self = this;
+		// list of `state` value/display objects
+		//self.tenants        = loadAll();
+		self.selectedItem  = null;
+		self.searchText    = "";
+		self.querySearch   = querySearch;
 
-    function querySearch (query) {
+		function querySearch (query) {
 
-      //Custom Filter
-      var results=[];
-      var len=0;
-      for (var i = 0, len = $scope.planlist.length; i<len; ++i){
-        //console.log($scope.allBanks[i].value.value);
+			//Custom Filter
+			var results=[];
+			var len=0;
+			for (var i = 0, len = $scope.planlist.length; i<len; ++i){
+				//console.log($scope.allBanks[i].value.value);
 
-        if($scope.planlist[i].name.toLowerCase().indexOf(query.toLowerCase()) !=-1)
-        {
-          results.push($scope.planlist[i]);
-        }
-        else if($scope.planlist[i].code.toLowerCase().indexOf(query.toLowerCase()) !=-1)
-        {
-          results.push($scope.planlist[i]);
-        }
+				if($scope.planlist[i].name.toLowerCase().indexOf(query.toLowerCase()) !=-1)
+				{
+					results.push($scope.planlist[i]);
+				}
+				else if($scope.planlist[i].code.toLowerCase().indexOf(query.toLowerCase()) !=-1)
+				{
+					results.push($scope.planlist[i]);
+				}
 
-      }
-      return results;
-    }
+			}
+			return results;
+		}
 
-    vm.selectedPlanForLink="";
-    $scope.planlist = [];
-    var skipPlans=0;
-    var takePlans=2;
-    $scope.loadingPlans = false;
-    $scope.loadAllPlans = function() {
-      $scope.loadingPlans = true;
-      $azureSearchHandle.getClient().SearchRequest("plan",skipPlans,takePlans,'desc','Active').onComplete(function(Response)
-      {
-        if($scope.loadingPlans)
-        {
-          skipPlans += takePlans;
+		vm.selectedPlanForLink="";
+		$scope.planlist = [];
+		var skipPlans=0;
+		var takePlans=2;
+		$scope.loadingPlans = false;
+		$scope.loadAllPlans = function() {
+			$scope.loadingPlans = true;
+			$azureSearchHandle.getClient().SearchRequest("plan",skipPlans,takePlans,'desc','Active').onComplete(function(Response)
+			{
+				if($scope.loadingPlans)
+				{
+					skipPlans += takePlans;
 
-          for (var i = 0; i < Response.length; i++) {
-            Response[i].createdDate = $filter('date')(new Date(Response[i].createdDate), 'yyyy-MM-dd', false);
-            $scope.planlist.push(Response[i]);
-          }
+					for (var i = 0; i < Response.length; i++) {
+						Response[i].createdDate = $filter('date')(new Date(Response[i].createdDate), 'yyyy-MM-dd', false);
+						$scope.planlist.push(Response[i]);
+					}
 
-          $scope.loadingPlans = false;
+					$scope.loadingPlans = false;
 
-          if(Response.length=takePlans){
-            $scope.loadAllPlans();
-          }
+					if(Response.length=takePlans){
+						$scope.loadAllPlans();
+					}
 
-        }
+				}
 
-      }).onError(function(data)
-      {
-        //console.log(data);
-        $scope.loadingPlans = false;
+			}).onError(function(data)
+			{
+				//console.log(data);
+				$scope.loadingPlans = false;
 
-        $scope.infoJson= {};
-        $scope.infoJson.message =JSON.stringify(data);
-        $scope.infoJson.app ='rating';
-        logHelper.error( $scope.infoJson);
-      });
-    }
-    $scope.loadAllPlans();
+				$scope.infoJson= {};
+				$scope.infoJson.message =JSON.stringify(data);
+				$scope.infoJson.app ='rating';
+				logHelper.error( $scope.infoJson);
+			});
+		}
+		$scope.loadAllPlans();
 
 		function changePlans(){
 			toggleinnerView('add');
@@ -649,7 +649,7 @@
 		$scope.showInpageReadpane = false;
 		$scope.switchInfoPane = function (state, feature) {
 			if($scope.selectMultiplePlansForEmbedForm){
-        feature.selectForEmbed = !feature.selectForEmbed;
+				feature.selectForEmbed = !feature.selectForEmbed;
 			}else {
 				if (state == 'show') {
 					$scope.showInpageReadpane = true;
@@ -691,121 +691,121 @@
 		$scope.isLoading = true;
 		$scope.isdataavailable=true;
 		$scope.hideSearchMore=false;
-    $scope.priceSchemeFeatureList=[];
-    $scope.items=[];
+		$scope.priceSchemeFeatureList=[];
+		$scope.items=[];
 
 		$scope.more = function(){
 
 			$scope.isLoading = true;
 
-      $scope.priceSchemeFeatureList=[];
-      $scope.items=[];
-      $scope.loadingPriceSchemeFeatures = true;
-      $charge.plan().allFeatures().success(function(data)
-      {
-        //console.log(data);
+			$scope.priceSchemeFeatureList=[];
+			$scope.items=[];
+			$scope.loadingPriceSchemeFeatures = true;
+			$charge.plan().allFeatures().success(function(data)
+			{
+				//console.log(data);
 
-        if($scope.loadingPriceSchemeFeatures)
-        {
-          angular.forEach(data, function(scheme){
-            //$scope.priceSchemeFeatureList.push(scheme[0]);
-            var featureObj = {};
+				if($scope.loadingPriceSchemeFeatures)
+				{
+					angular.forEach(data, function(scheme){
+						//$scope.priceSchemeFeatureList.push(scheme[0]);
+						var featureObj = {};
 
-            if(scheme[0].type=="FIXED")
-            {
-              featureObj.feature=scheme[0].feature;
-              featureObj.featureCode=scheme[0].featureCode;
-              featureObj.type=scheme[0].type;
-              featureObj.unitsFrom=scheme[0].unitsFrom!=""?parseInt(scheme[0].unitsFrom):"";
-              featureObj.unitsTo=scheme[0].unitsTo!=""?parseInt(scheme[0].unitsTo):"";
-              featureObj.unitUom=scheme[0].unitUom;
-              featureObj.price=scheme[0].price!=""?parseInt(scheme[0].price):"";
-              featureObj.uom=scheme[0].uom;
-              featureObj.autoTermination=scheme[0].autoTermination=="1"?true:false;
-              featureObj.costPerUnitAdd=parseInt(scheme[0].costPerUnitAdd);
+						if(scheme[0].type=="FIXED")
+						{
+							featureObj.feature=scheme[0].feature;
+							featureObj.featureCode=scheme[0].featureCode;
+							featureObj.type=scheme[0].type;
+							featureObj.unitsFrom=scheme[0].unitsFrom!=""?parseInt(scheme[0].unitsFrom):"";
+							featureObj.unitsTo=scheme[0].unitsTo!=""?parseInt(scheme[0].unitsTo):"";
+							featureObj.unitUom=scheme[0].unitUom;
+							featureObj.price=scheme[0].price!=""?parseInt(scheme[0].price):"";
+							featureObj.uom=scheme[0].uom;
+							featureObj.autoTermination=scheme[0].autoTermination=="1"?true:false;
+							featureObj.costPerUnitAdd=parseInt(scheme[0].costPerUnitAdd);
 
-              featureObj.scheme = [];
+							featureObj.scheme = [];
 
-              var slabObj = {};
-              //featureObj.productlst = angular.copy($scope.productlist);
-              slabObj.type = "SLAB";
-              slabObj.autoTermination = true;
-              featureObj.scheme.push(slabObj);
+							var slabObj = {};
+							//featureObj.productlst = angular.copy($scope.productlist);
+							slabObj.type = "SLAB";
+							slabObj.autoTermination = true;
+							featureObj.scheme.push(slabObj);
 
-              $scope.items.push(featureObj);
-            }
-            else if(scheme[0].type=="SLAB")
-            {
-              featureObj.feature=scheme[0].feature;
-              featureObj.featureCode=scheme[0].featureCode;
-              featureObj.type=scheme[0].type;
-              featureObj.autoTermination = scheme[0].autoTermination=="1"?true:false;
+							$scope.items.push(featureObj);
+						}
+						else if(scheme[0].type=="SLAB")
+						{
+							featureObj.feature=scheme[0].feature;
+							featureObj.featureCode=scheme[0].featureCode;
+							featureObj.type=scheme[0].type;
+							featureObj.autoTermination = scheme[0].autoTermination=="1"?true:false;
 
-              featureObj.scheme = [];
-              for (var i = 0; i < scheme.length; i++) {
-                var slabObj = {};
-                slabObj.type = "SLAB";
-                slabObj.unitsFrom = scheme[i].unitsFrom!=""?parseInt(scheme[i].unitsFrom):"";
-                slabObj.unitsTo = scheme[i].unitsTo!=""?parseInt(scheme[i].unitsTo):"";
-                slabObj.unitUom = scheme[i].unitUom;
-                slabObj.price = scheme[i].price!=""?parseInt(scheme[i].price):"";
-                slabObj.uom = scheme[i].uom;
-                slabObj.autoTermination = scheme[i].autoTermination=="1"?true:false;
-                slabObj.costPerUnitAdd = parseInt(scheme[i].costPerUnitAdd);
-                featureObj.scheme.push(slabObj);
-              }
+							featureObj.scheme = [];
+							for (var i = 0; i < scheme.length; i++) {
+								var slabObj = {};
+								slabObj.type = "SLAB";
+								slabObj.unitsFrom = scheme[i].unitsFrom!=""?parseInt(scheme[i].unitsFrom):"";
+								slabObj.unitsTo = scheme[i].unitsTo!=""?parseInt(scheme[i].unitsTo):"";
+								slabObj.unitUom = scheme[i].unitUom;
+								slabObj.price = scheme[i].price!=""?parseInt(scheme[i].price):"";
+								slabObj.uom = scheme[i].uom;
+								slabObj.autoTermination = scheme[i].autoTermination=="1"?true:false;
+								slabObj.costPerUnitAdd = parseInt(scheme[i].costPerUnitAdd);
+								featureObj.scheme.push(slabObj);
+							}
 
-              $scope.items.push(featureObj);
-            }
-            else
-            {
-              featureObj.feature=scheme[0].feature;
-              featureObj.featureCode=scheme[0].featureCode;
-              featureObj.type="optional";
-              featureObj.unitsFrom=scheme[0].unitsFrom!=""?parseInt(scheme[0].unitsFrom):"";
-              featureObj.unitsTo=scheme[0].unitsTo!=""?parseInt(scheme[0].unitsTo):"";
-              featureObj.unitUom=scheme[0].unitUom;
-              featureObj.price=scheme[0].price!=""?parseInt(scheme[0].price):"";
-              featureObj.uom=scheme[0].uom;
-              featureObj.autoTermination=true;
-              featureObj.costPerUnitAdd=parseInt(scheme[0].costPerUnitAdd);
+							$scope.items.push(featureObj);
+						}
+						else
+						{
+							featureObj.feature=scheme[0].feature;
+							featureObj.featureCode=scheme[0].featureCode;
+							featureObj.type="optional";
+							featureObj.unitsFrom=scheme[0].unitsFrom!=""?parseInt(scheme[0].unitsFrom):"";
+							featureObj.unitsTo=scheme[0].unitsTo!=""?parseInt(scheme[0].unitsTo):"";
+							featureObj.unitUom=scheme[0].unitUom;
+							featureObj.price=scheme[0].price!=""?parseInt(scheme[0].price):"";
+							featureObj.uom=scheme[0].uom;
+							featureObj.autoTermination=true;
+							featureObj.costPerUnitAdd=parseInt(scheme[0].costPerUnitAdd);
 
-              featureObj.scheme = [];
+							featureObj.scheme = [];
 
-              var slabObj = {};
-              //featureObj.productlst = angular.copy($scope.productlist);
-              slabObj.type = "SLAB";
-              slabObj.autoTermination = true;
-              featureObj.scheme.push(slabObj);
+							var slabObj = {};
+							//featureObj.productlst = angular.copy($scope.productlist);
+							slabObj.type = "SLAB";
+							slabObj.autoTermination = true;
+							featureObj.scheme.push(slabObj);
 
-              $scope.items.push(featureObj);
-            }
+							$scope.items.push(featureObj);
+						}
 
-          });
+					});
 
-          $timeout(function () {
-            $scope.priceSchemeFeatureList = $scope.items;
-          });
+					$timeout(function () {
+						$scope.priceSchemeFeatureList = $scope.items;
+					});
 
-          $scope.loadingPriceSchemeFeatures = false;
-          $scope.isLoading = false;
-          $scope.isdataavailable=false;
-          $scope.hideSearchMore=true;
+					$scope.loadingPriceSchemeFeatures = false;
+					$scope.isLoading = false;
+					$scope.isdataavailable=false;
+					$scope.hideSearchMore=true;
 
-        }
+				}
 
-      }).error(function(data)
-      {
-        $scope.loadingPriceSchemeFeatures = false;
-        $scope.isLoading = false;
-        $scope.isdataavailable=false;
-        $scope.hideSearchMore=true;
+			}).error(function(data)
+			{
+				$scope.loadingPriceSchemeFeatures = false;
+				$scope.isLoading = false;
+				$scope.isdataavailable=false;
+				$scope.hideSearchMore=true;
 
-        $scope.infoJson= {};
-        $scope.infoJson.message =JSON.stringify(data);
-        $scope.infoJson.app ='rating';
-        logHelper.error( $scope.infoJson);
-      })
+				$scope.infoJson= {};
+				$scope.infoJson.message =JSON.stringify(data);
+				$scope.infoJson.app ='rating';
+				logHelper.error( $scope.infoJson);
+			})
 
 		};
 		// we call the function twice to populate the list
@@ -865,43 +865,43 @@
 
 		$scope.openFeatureDialog = function (mode, feature) {
 
-      vm.uoms=$scope.UOMs;
-      vm.mode=mode;
+			vm.uoms=$scope.UOMs;
+			vm.mode=mode;
 
-      vm.featureType='';
-      vm.addNewUOM=false;
+			vm.featureType='';
+			vm.addNewUOM=false;
 
 			if(mode=="Add")
 			{
-        vm.closeAdvanceFeatures(vm.features);
+				vm.closeAdvanceFeatures(vm.features);
 				$scope.addNewRow(vm.features);
 			}
 			else if(mode=="Update")
 			{
 				//$scope.addNewRow(vm.features);
-        vm.features=feature;
+				vm.features=feature;
 
-        $timeout(function () {
-          vm.advancedFeaturesConfirmed = true;
-          vm.loaded = true;
-        });
+				$timeout(function () {
+					vm.advancedFeaturesConfirmed = true;
+					vm.loaded = true;
+				});
 
-        vm.featureType=vm.features.type;
-        if(vm.featureType!='optional')
-        {
-          vm.advancedFeaturesConfirmed = true;
-          vm.showAdvanceFeatures = true;
-          //vm.setAdvanceFeatures(vm.features);
-          //vm.closeAdvanceFeatures(vm.features);
-          $scope.setFeature(vm.features, vm.featureType);
-        }
-        else
-        {
-          vm.closeAdvanceFeatures(vm.features);
-        }
+				vm.featureType=vm.features.type;
+				if(vm.featureType!='optional')
+				{
+					vm.advancedFeaturesConfirmed = true;
+					vm.showAdvanceFeatures = true;
+					//vm.setAdvanceFeatures(vm.features);
+					//vm.closeAdvanceFeatures(vm.features);
+					$scope.setFeature(vm.features, vm.featureType);
+				}
+				else
+				{
+					vm.closeAdvanceFeatures(vm.features);
+				}
 
 			}
-      $scope.toggleEdit();
+			$scope.toggleEdit();
 
 			//$mdDialog.show({
 			//	controller: 'AddFeaturesRatingController as vm',
@@ -914,220 +914,222 @@
 			//		mode: mode
 			//	}
 			//}).then(function(answer) {
-        //$scope.more();
-        //$scope.getAllUOM();
+			//$scope.more();
+			//$scope.getAllUOM();
 			//}, function() {
-        //
+			//
 			//});
 		};
 
-    $scope.setFeature = function (row, type) {
-      // row.advancedFeaturesConfirmed = true;
-      vm.featuresInit = false;
-      vm.showAdvanceFeatures=true;
-      type == 'FIXED' ? row.type = 'FIXED' : row.type='SLAB';
-      type == 'FIXED' ? vm.featureType = 'FIXED' : vm.featureType='SLAB';
-      var elem = document.getElementsByClassName('content-wrapper')[0];
-      elem.scrollTop = elem.scrollHeight - elem.clientHeight;
-    }
+		$scope.setFeature = function (row, type) {
+			// row.advancedFeaturesConfirmed = true;
+			vm.featuresInit = false;
+			vm.showAdvanceFeatures=true;
+			type == 'FIXED' ? row.type = 'FIXED' : row.type='SLAB';
+			type == 'FIXED' ? vm.featureType = 'FIXED' : vm.featureType='SLAB';
+			var elem = document.getElementsByClassName('content-wrapper')[0];
+			elem.scrollTop = elem.scrollHeight - elem.clientHeight;
+		}
 
-    vm.setAdvanceFeatures=function(row) {
-      // row.showAdvanceFeatures=true;
-      vm.featuresInit = true;
-      vm.advancedFeaturesConfirmed = false;
-      // angular.element('#createFeatureType').triggerHandler('click');
-    }
-    vm.closeAdvanceFeatures=function(row) {
-      // row.showAdvanceFeatures=false;
-      // row.advancedFeaturesConfirmed = false;
-      row.type = "optional";
+		vm.setAdvanceFeatures=function(row) {
+			// row.showAdvanceFeatures=true;
+			vm.featureType = 'FIXED';
+			vm.featuresInit = true;
+			vm.advancedFeaturesConfirmed = false;
+			vm.showAdvanceFeatures = true;
+			// angular.element('#createFeatureType').triggerHandler('click');
+		}
+		vm.closeAdvanceFeatures=function(row) {
+			// row.showAdvanceFeatures=false;
+			// row.advancedFeaturesConfirmed = false;
+			row.type = "optional";
 
-      vm.showAdvanceFeatures=false;
-      vm.featuresInit = false;
-      vm.featureType = "optional";
+			vm.showAdvanceFeatures=false;
+			vm.featuresInit = false;
+			vm.featureType = "optional";
 
-      vm.addNewUOM=false;
-      vm.newUOM = "";
+			vm.addNewUOM=false;
+			vm.newUOM = "";
 
-    }
+		}
 
-    $scope.addNewSlab=function(slab) {
+		$scope.addNewSlab=function(slab) {
 
-      var slabObj = {};
-      //featureObj.productlst = angular.copy($scope.productlist);
-      slabObj.type = "SLAB";
-      slabObj.autoTermination = true;
-      slab.scheme.push(slabObj);
-    }
+			var slabObj = {};
+			//featureObj.productlst = angular.copy($scope.productlist);
+			slabObj.type = "SLAB";
+			slabObj.autoTermination = true;
+			slab.scheme.push(slabObj);
+		}
 
-    $scope.removerow = function (index,rowname) {
+		$scope.removerow = function (index,rowname) {
 
-      if(rowname.length!=1)
-      {
-        rowname.splice(index, 1);
-      }
-      //rowname.splice(index, 1);
-      //self1.searchText.splice(index,1);
+			if(rowname.length!=1)
+			{
+				rowname.splice(index, 1);
+			}
+			//rowname.splice(index, 1);
+			//self1.searchText.splice(index,1);
 
-    }
+		}
 
-    $scope.addUOM = function () {
-      var uom=vm.newUOM;
-      if (uom != null && uom != "") {
-        var isDuplicate = false;
-        if (vm.uoms.length != 0) {
-          for (var i = 0; i < vm.uoms.length; i++) {
-            if (vm.uoms[i].UOMCode == uom) {
-              notifications.toast("UOM Code is already exist.", "error");
-              vm.newUOM = "";
-              isDuplicate = true;
-              break;
-            }
-          }
-        }
-        if (!isDuplicate) {
-          var req = {
-            "GUUOMID": "123",
-            "GUUOMTypeID": "supplier1",
-            "GUTranID": "12345",
-            "CommitStatus": "Active",
-            "UOMCode": uom,
-            "uomApplicationMapperDetail": [{
-              "GUApplicationID": "Plan_123"
-            }],
-            "uomConversionDetails": [{
-              "FromUOMCode": uom,
-              "Qty": "10",
-              "ToUOMCode": uom
-            }]
+		$scope.addUOM = function () {
+			var uom=vm.newUOM;
+			if (uom != null && uom != "") {
+				var isDuplicate = false;
+				if (vm.uoms.length != 0) {
+					for (var i = 0; i < vm.uoms.length; i++) {
+						if (vm.uoms[i].UOMCode == uom) {
+							notifications.toast("UOM Code is already exist.", "error");
+							vm.newUOM = "";
+							isDuplicate = true;
+							break;
+						}
+					}
+				}
+				if (!isDuplicate) {
+					var req = {
+						"GUUOMID": "123",
+						"GUUOMTypeID": "supplier1",
+						"GUTranID": "12345",
+						"CommitStatus": "Active",
+						"UOMCode": uom,
+						"uomApplicationMapperDetail": [{
+							"GUApplicationID": "Plan_123"
+						}],
+						"uomConversionDetails": [{
+							"FromUOMCode": uom,
+							"Qty": "10",
+							"ToUOMCode": uom
+						}]
 
-          }
-          $charge.uom().store(req).success(function (data) {
-            notifications.toast("UOM has been added.", "success");
-            vm.uoms.push(req);
-            vm.addNewUOM=false;
-            vm.newUOM = "";
-            //if(data.IsSuccess) {
-            //  console.log(data);
-            //}
-          }).error(function (data) {
-            //console.log(data);
-            notifications.toast("UOM adding failed", "error");
-            vm.addNewUOM=false;
-            vm.newUOM = "";
-          })
-        }
-      }
-      else{
-        notifications.toast("UOM cannot be empty", "error");
-      }
+					}
+					$charge.uom().store(req).success(function (data) {
+						notifications.toast("UOM has been added.", "success");
+						vm.uoms.push(req);
+						vm.addNewUOM=false;
+						vm.newUOM = "";
+						//if(data.IsSuccess) {
+						//  console.log(data);
+						//}
+					}).error(function (data) {
+						//console.log(data);
+						notifications.toast("UOM adding failed", "error");
+						vm.addNewUOM=false;
+						vm.newUOM = "";
+					})
+				}
+			}
+			else{
+				notifications.toast("UOM cannot be empty", "error");
+			}
 
-    }
+		}
 
-    $scope.showAddUOMPrompt = function(ev) {
-      // Appending dialog to document.body to cover sidenav in docs app
-      vm.addNewUOM=true;
-    };
+		$scope.showAddUOMPrompt = function(ev) {
+			// Appending dialog to document.body to cover sidenav in docs app
+			vm.addNewUOM=true;
+		};
 
-    $scope.closeAddUOM = function() {
-      // Appending dialog to document.body to cover sidenav in docs app
-      vm.addNewUOM=false;
-      vm.newUOM = "";
-    };
+		$scope.closeAddUOM = function() {
+			// Appending dialog to document.body to cover sidenav in docs app
+			vm.addNewUOM=false;
+			vm.newUOM = "";
+		};
 
-    $scope.submitAddFeature=function() {
+		$scope.submitAddFeature=function() {
 
-      vm.addFeatureSubmitted=true;
+			vm.addFeatureSubmitted=true;
 
-      var priceSchemeObj=vm.features;
-      if(priceSchemeObj.type == "FIXED")
-      {
-        priceSchemeObj.scheme[0].type="FIXED";
-        priceSchemeObj.scheme[0].unitsFrom=priceSchemeObj.unitsFrom;
-        priceSchemeObj.scheme[0].unitsTo=priceSchemeObj.unitsTo;
-        priceSchemeObj.scheme[0].unitUom=priceSchemeObj.unitUom;
-        priceSchemeObj.scheme[0].price=priceSchemeObj.price;
-        priceSchemeObj.scheme[0].uom=priceSchemeObj.uom;
-        priceSchemeObj.scheme[0].autoTermination=priceSchemeObj.autoTermination;
-        priceSchemeObj.scheme[0].costPerUnitAdd=priceSchemeObj.costPerUnitAdd!=undefined?priceSchemeObj.costPerUnitAdd:"";
+			var priceSchemeObj=vm.features;
+			if(priceSchemeObj.type == "FIXED")
+			{
+				priceSchemeObj.scheme[0].type="FIXED";
+				priceSchemeObj.scheme[0].unitsFrom=priceSchemeObj.unitsFrom;
+				priceSchemeObj.scheme[0].unitsTo=priceSchemeObj.unitsTo;
+				priceSchemeObj.scheme[0].unitUom=priceSchemeObj.unitUom;
+				priceSchemeObj.scheme[0].price=priceSchemeObj.price;
+				priceSchemeObj.scheme[0].uom=priceSchemeObj.uom;
+				priceSchemeObj.scheme[0].autoTermination=priceSchemeObj.autoTermination;
+				priceSchemeObj.scheme[0].costPerUnitAdd=priceSchemeObj.costPerUnitAdd!=undefined?priceSchemeObj.costPerUnitAdd:"";
 
-        for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
-          priceSchemeObj.scheme.splice(k, 1);
-        }
-      }
-      else if(priceSchemeObj.type == "SLAB")
-      {
-        for (var j = 0; j < priceSchemeObj.scheme.length; j++) {
-          var slabObj=priceSchemeObj.scheme[j];
-          slabObj.type="SLAB";
-          slabObj.costPerUnitAdd=slabObj.costPerUnitAdd!=undefined?slabObj.costPerUnitAdd:"";
-        }
-      }
-      else if(priceSchemeObj.type == "optional")
-      {
-        priceSchemeObj.scheme[0].type="";
-        priceSchemeObj.scheme[0].unitsFrom="";
-        priceSchemeObj.scheme[0].unitsTo="";
-        priceSchemeObj.scheme[0].unitUom="";
-        priceSchemeObj.scheme[0].price="";
-        priceSchemeObj.scheme[0].uom="";
-        priceSchemeObj.scheme[0].autoTermination="";
-        priceSchemeObj.scheme[0].costPerUnitAdd="";
+				for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
+					priceSchemeObj.scheme.splice(k, 1);
+				}
+			}
+			else if(priceSchemeObj.type == "SLAB")
+			{
+				for (var j = 0; j < priceSchemeObj.scheme.length; j++) {
+					var slabObj=priceSchemeObj.scheme[j];
+					slabObj.type="SLAB";
+					slabObj.costPerUnitAdd=slabObj.costPerUnitAdd!=undefined?slabObj.costPerUnitAdd:"";
+				}
+			}
+			else if(priceSchemeObj.type == "optional")
+			{
+				priceSchemeObj.scheme[0].type="";
+				priceSchemeObj.scheme[0].unitsFrom="";
+				priceSchemeObj.scheme[0].unitsTo="";
+				priceSchemeObj.scheme[0].unitUom="";
+				priceSchemeObj.scheme[0].price="";
+				priceSchemeObj.scheme[0].uom="";
+				priceSchemeObj.scheme[0].autoTermination="";
+				priceSchemeObj.scheme[0].costPerUnitAdd="";
 
-        for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
-          priceSchemeObj.scheme.splice(k, 1);
-        }
-      }
+				for (var k = 1; k < priceSchemeObj.scheme.length; k++) {
+					priceSchemeObj.scheme.splice(k, 1);
+				}
+			}
 
-      if(vm.mode=='Add')
-      {
-        $charge.plan().addNewFeature(priceSchemeObj).success(function(data){
-          //console.log(data);
-          if(data.response=="succeeded")
-          {
-            notifications.toast("Successfully Feature added","success");
-            $scope.editOff = false;
-            vm.pageTitle = "Create Rating";
-            vm.activePlanPaneIndex = 0;
-            $scope.loading=true;
-            $scope.more();
-          }
-          else
-          {
-            notifications.toast("Feature adding Failed","error");
-          }
-          vm.addFeatureSubmitted=false;
-        }).error(function(data) {
-          //console.log(data);
-          notifications.toast("Feature adding Failed","error");
-          vm.addFeatureSubmitted=false;
-        });
-      }
-      else
-      {
-        $charge.plan().updateFeature(priceSchemeObj).success(function(data){
-          //console.log(data);
-          if(data.response=="succeeded")
-          {
-            notifications.toast("Successfully Feature updated","success");
-            $scope.editOff = false;
-            vm.pageTitle = "Create Rating";
-            vm.activePlanPaneIndex = 0;
-            $scope.loading=true;
-            $scope.more();
-          }
-          else
-          {
-            notifications.toast("Feature updating Failed","error");
-          }
-          vm.addFeatureSubmitted=false;
-        }).error(function(data) {
-          //console.log(data);
-          notifications.toast("Feature updating Failed","error");
-          vm.addFeatureSubmitted=false;
-        });
-      }
-    }
+			if(vm.mode=='Add')
+			{
+				$charge.plan().addNewFeature(priceSchemeObj).success(function(data){
+					//console.log(data);
+					if(data.response=="succeeded")
+					{
+						notifications.toast("Successfully Feature added","success");
+						$scope.editOff = false;
+						vm.pageTitle = "Create Rating";
+						vm.activePlanPaneIndex = 0;
+						$scope.loading=true;
+						$scope.more();
+					}
+					else
+					{
+						notifications.toast("Feature adding Failed","error");
+					}
+					vm.addFeatureSubmitted=false;
+				}).error(function(data) {
+					//console.log(data);
+					notifications.toast("Feature adding Failed","error");
+					vm.addFeatureSubmitted=false;
+				});
+			}
+			else
+			{
+				$charge.plan().updateFeature(priceSchemeObj).success(function(data){
+					//console.log(data);
+					if(data.response=="succeeded")
+					{
+						notifications.toast("Successfully Feature updated","success");
+						$scope.editOff = false;
+						vm.pageTitle = "Create Rating";
+						vm.activePlanPaneIndex = 0;
+						$scope.loading=true;
+						$scope.more();
+					}
+					else
+					{
+						notifications.toast("Feature updating Failed","error");
+					}
+					vm.addFeatureSubmitted=false;
+				}).error(function(data) {
+					//console.log(data);
+					notifications.toast("Feature updating Failed","error");
+					vm.addFeatureSubmitted=false;
+				});
+			}
+		}
 
 		$scope.showDeleteFeatureConfirm = function(ev,row) {
 			// Appending dialog to document.body to cover sidenav in docs app
@@ -1153,7 +1155,7 @@
 				if(data.response=="succeeded")
 				{
 					notifications.toast("Successfully Rating removed","success");
-          $scope.more();
+					$scope.more();
 
 					$scope.infoJson= {};
 					$scope.infoJson.message =featureCode+' Successfully Rating removed';
@@ -1200,10 +1202,11 @@
 
 			//rowname.push(featureObj);
 			vm.features=featureObj;
+			vm.setAdvanceFeatures();
 		}
 
 		//$scope.addNewSlab=function(slab) {
-        //
+		//
 		//	var slabObj = {};
 		//	//featureObj.productlst = angular.copy($scope.productlist);
 		//	slabObj.type = "SLAB";
@@ -1248,7 +1251,7 @@
 		//	}
 		//	//rowname.splice(index, 1);
 		//	//self1.searchText.splice(index,1);
-        //
+		//
 		//}
 		//$scope.featureType='';
 		//$scope.setFeature = function (row, type) {
@@ -1269,11 +1272,11 @@
 		//	// row.showAdvanceFeatures=false;
 		//	// row.advancedFeaturesConfirmed = false;
 		//	// row.type = "optional";
-        //
+		//
 		//	$scope.showAdvanceFeatures=false;
 		//	$scope.advancedFeaturesConfirmed = false;
 		//	$scope.featureType = "optional";
-        //
+		//
 		//}
 
 		// Kasun_Wijeratne_8_5_2017

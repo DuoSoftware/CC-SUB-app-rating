@@ -426,7 +426,7 @@
 		vm.selectedPlanForLink="";
 		$scope.planlist = [];
 		var skipPlans=0;
-		var takePlans=100;
+		var takePlans=2;
 		$scope.loadingPlans = false;
 		$scope.loadAllPlans = function() {
 			$scope.loadingPlans = true;
@@ -443,7 +443,7 @@
 
 					$scope.loadingPlans = false;
 
-					if(Response.length==takePlans){
+					if(Response.length=takePlans){
 						$scope.loadAllPlans();
 					}
 

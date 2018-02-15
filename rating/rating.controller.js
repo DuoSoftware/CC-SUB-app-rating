@@ -875,7 +875,7 @@
 			{
 				vm.closeAdvanceFeatures(vm.features);
 				$scope.addNewRow(vm.features);
-				vm.featureType='optional';
+				vm.featureType='FIXED';
 			}
 			else if(mode=="Update")
 			{

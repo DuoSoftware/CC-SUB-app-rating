@@ -1,9 +1,9 @@
 //////////////////////////////////////
 // App : Rating						//
 // Owner  : Gihan Herath			//
-// Last changed date : 2018/02/12	//
+// Last changed date : 2018/02/15	//
 // Version : 6.1.0.2				//
-// Modified By : Kasun				//
+// Modified By : Gihan				//
 //////////////////////////////////////
 
 (function ()

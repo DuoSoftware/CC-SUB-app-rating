@@ -127,7 +127,7 @@
                 <!--<div flex ng-hide="row.showAdvanceFeatures"></div>-->
                 <div flex class="light-gray ph-15 pos-rel" layout="row" layout-align="center center">
                     <md-input-container class="mv-5">
-                        <md-radio-group name="planType" ng-required ng-model="vm.featureType" layout="row" class="cc-switch-buttons-group">
+                        <md-radio-group name="planType" ng-required ng-model="vm.featureType" ng-click="setFeature(vm.features, vm.featureType)" layout="row" class="cc-switch-buttons-group">
                             <md-radio-button value="FIXED" class="cc-switch-buttons" md-ink-ripple ng-disabled="vm.featureType == 'FIXED'" ng-style="vm.featureType == 'SLAB' ? {'z-index':'1'} : {'z-index':'0'}">FIXED</md-radio-button>
                             <md-radio-button value="SLAB" class="cc-switch-buttons" md-ink-ripple ng-disabled="vm.featureType == 'SLAB'" ng-style="vm.featureType == 'FIXED' ? {'z-index':'1'} : {'z-index':'0'}">SLAB</md-radio-button>
                         </md-radio-group>

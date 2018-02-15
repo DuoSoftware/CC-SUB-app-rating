@@ -443,7 +443,7 @@
 
 					$scope.loadingPlans = false;
 
-					if(Response.length=takePlans){
+					if(Response.length==takePlans){
 						$scope.loadAllPlans();
 					}
 
@@ -875,6 +875,7 @@
 			{
 				vm.closeAdvanceFeatures(vm.features);
 				$scope.addNewRow(vm.features);
+				vm.featureType='FIXED';
 			}
 			else if(mode=="Update")
 			{
@@ -1187,7 +1188,7 @@
 			var featureObj = {};
 			//featureObj.productlst = angular.copy($scope.productlist);
 			//product.qty=0;
-			featureObj.type = "optional";
+			featureObj.type = "FIXED";
 			//featureObj.feature = "optional";
 			featureObj.unitsFrom = "0";
 			featureObj.autoTermination = true;

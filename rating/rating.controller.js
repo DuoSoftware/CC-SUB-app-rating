@@ -1188,7 +1188,7 @@
 			var featureObj = {};
 			//featureObj.productlst = angular.copy($scope.productlist);
 			//product.qty=0;
-			featureObj.type = "optional";
+			featureObj.type = "FIXED";
 			//featureObj.feature = "optional";
 			featureObj.unitsFrom = "0";
 			featureObj.autoTermination = true;

@@ -443,7 +443,7 @@
 
 					$scope.loadingPlans = false;
 
-					if(Response.length=takePlans){
+					if(Response.length==takePlans){
 						$scope.loadAllPlans();
 					}
 
